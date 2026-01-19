@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blood Bond - YIBD</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<section class="blood-hero">
+    <h1>🩸 Blood Bond Program</h1>
+    <p>Find blood donors or register yourself to save lives.</p>
+</section>
+
+<div class="container">
+    <div class="grid">
+        <div class="section-card">
+            <h3>Register as Donor</h3>
+            <form id="donorForm">
+                <input type="text" id="name" placeholder="Full Name" required><br>
+                <input type="tel" id="phone" placeholder="Phone Number" required><br>
+                <input type="text" id="district" placeholder="District" required><br>
+                <select id="blood" required>
+                    <option value="">Blood Group</option>
+                    <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+                    <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
+                </select><br>
+                <button type="submit" class="btn-primary" style="background:#d32f2f; width:100%;">Register</button>
+            </form>
+        </div>
+        <div class="section-card">
+            <h3>Search Donor</h3>
+            <input type="text" id="search" placeholder="Search by Blood or District" onkeyup="searchDonor()">
+            <div id="stats" style="margin-top:20px;">Total Donors: <span id="count">0</span></div>
+        </div>
+    </div>
+
+    <div class="section-card" style="margin-top:20px;">
+        <table>
+            <thead><tr><th>Name</th><th>Blood</th><th>District</th><th>Contact</th></tr></thead>
+            <tbody id="donorList"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let donors = JSON.parse(localStorage.getItem('yibd_donors')) || [];
+    function render() {
+        const list = document.getElementById('donorList');
+        list.innerHTML = "";
+        donors.forEach(d => {
+            list.innerHTML += `<tr><td>${d.name}</td><td><b style="color:red">${d.blood}</b></td><td>${d.district}</td><td><a href="tel:${d.phone}">${d.phone}</a></td></tr>`;
+        });
+        document.getElementById('count').innerText = donors.length;
+    }
+    document.getElementById('donorForm').onsubmit = (e) => {
+        e.preventDefault();
+        donors.push({name:name.value, phone:phone.value, district:district.value, blood:blood.value});
+        localStorage.setItem('yibd_donors', JSON.stringify(donors));
+        render(); e.target.reset();
+    };
+    render();
+    document.getElementById('menu-btn').onclick = () => document.getElementById('menu').classList.toggle('show');
+</script>
+</body>
+</html>
